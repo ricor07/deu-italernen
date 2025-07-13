@@ -97,7 +97,9 @@ void Scheda::prepareQuizQueue() {
 }
 
 void Scheda::loadFlashcards() {
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/flashcards.csv");
+    QString flashcardsPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/flashcards.csv");
+    QFile file(flashcardsPath);
+
     if (!file.open(QIODevice::ReadOnly)) {
         QMessageBox::critical(this, "Errore", "Impossibile aprire flashcards.csv");
         return;
@@ -136,7 +138,9 @@ void Scheda::loadFlashcards() {
 void Scheda::loadScores() {
     scores.clear();
 
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/scores.csv");
+    QString scoresPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/scores.csv");
+    QFile file(scoresPath);
+
     if (!file.open(QIODevice::ReadOnly)) {
         int totalWords = flashcards.size() * 2;
         for (int i = 0; i < totalWords; ++i)
@@ -180,7 +184,9 @@ void Scheda::loadScores() {
 }
 
 void Scheda::loadScheda() {
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/scheda.csv");
+    QString schedaPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/scheda.csv");
+    QFile file(schedaPath);
+
     
     // Check if file exists and is not empty
     bool fileEmpty = true;
@@ -276,7 +282,9 @@ void Scheda::generateNewScheda() {
 
     // Save the generated scheda to storico immediately
     if (!schedaCards.isEmpty()) {
-        QString historyDir = QDir::homePath() + "/Desktop/deutschlernen/scheda_history";
+        QString historyDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/scheda_history";
+        QDir dir(historyDir);
+
         QDir().mkpath(historyDir);
         QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss");
         QString filePath = historyDir + QString("/scheda_%1.csv").arg(timestamp);
@@ -304,7 +312,9 @@ void Scheda::generateNewScheda() {
 }
 
 void Scheda::saveScheda() {
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/scheda.csv");
+    QString schedaPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/scheda.csv");
+    QFile file(schedaPath);
+
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
         qDebug() << "Cannot open scheda.csv for writing";
         return;
@@ -321,7 +331,9 @@ void Scheda::saveScheda() {
 void Scheda::loadAttemptCounter() {
     attemptCounter.clear();
 
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/attempt_counter.csv");
+    QString attemptCounterPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/attempt_counter.csv");
+    QFile file(attemptCounterPath);
+
     if (!file.open(QIODevice::ReadOnly)) {
         // File doesn't exist, initialize with zeros
         attemptCounter.resize(schedaCards.size());
@@ -371,7 +383,9 @@ void Scheda::loadAttemptCounter() {
 void Scheda::loadSelectedIndices() {
     selectedIndices.clear(); // Clear before loading
     
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/selected_indices.csv");
+    QString selectedIndicesPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/selected_indices.csv");
+    QFile file(selectedIndicesPath);
+
     if (!file.open(QIODevice::ReadOnly)) {
         // File doesn't exist - this should only happen when generating a new scheda
         // Don't initialize with zeros here, let generateNewScheda() handle it
@@ -397,7 +411,9 @@ void Scheda::loadSelectedIndices() {
 }
 
 void Scheda::saveAttemptCounter() {
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/attempt_counter.csv");
+    QString attemptCounterPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/attempt_counter.csv");
+    QFile file(attemptCounterPath);
+
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
         qDebug() << "Cannot open attempt_counter.csv for writing";
         return;
@@ -412,7 +428,9 @@ void Scheda::saveAttemptCounter() {
 }
 
 void Scheda::saveSelectedIndices() {
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/selected_indices.csv");
+    QString selectedIndicesPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/selected_indices.csv");
+    QFile file(selectedIndicesPath);
+
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
         qDebug() << "Cannot open selected_indices.csv for writing";
         return;
@@ -429,7 +447,9 @@ void Scheda::saveSelectedIndices() {
 void Scheda::saveScores(int index, const QPair<int, int>& tupleToAdd) {
     QVector<std::tuple<QString, int, int>> csvData;
 
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/scores.csv");
+    QString scoresPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/scores.csv");
+    QFile file(scoresPath);
+
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Cannot open CSV file for reading";
         return;
@@ -464,8 +484,10 @@ void Scheda::saveScores(int index, const QPair<int, int>& tupleToAdd) {
     auto& row = csvData[index];
     std::get<1>(row) += tupleToAdd.first;
     std::get<2>(row) += tupleToAdd.second;
+    
+    QString scoresPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/scores.csv");
+    QFile outFile(scoresPath);
 
-    QFile outFile("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/scores.csv");
     if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
         qDebug() << "Cannot open CSV file for writing";
         return;
