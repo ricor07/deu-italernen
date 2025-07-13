@@ -95,7 +95,7 @@ void TranslateHelper::onTranslateClicked() {
                  .replace("\"", "\\\"")
                  .replace("$", "\\$");
 
-    QString outputFilePath = "/Users/riccardoorsi/Desktop/deutschlernen/ollamaoutput.txt";
+    QString outputFilePath = QDir(QCoreApplication::applicationDirPath()).filePath("ollamaoutput.txt");
 
     // Fix: add missing terminating '"' character at the end of the string
     QString shellCommand = QString("OLLAMA_NO_TTY=1 NO_COLOR=1 ollama run gemma3n:e2b \\\"%1\\\" > \\\"%2\\\"").arg(escapedPrompt, outputFilePath);
@@ -456,7 +456,8 @@ void Articoli::showArticleText(const QString &title, const QString &text)
 
         QString escapedPrompt = escapeForAppleScriptShell(prompt);
 
-        QString outputPath = "/Users/riccardoorsi/Desktop/deutschlernen/domande_output.txt";
+        QString outputPath = QDir(QCoreApplication::applicationDirPath()).filePath("domande_output.txt");
+
         // Use -y to disable spinner, and redirect stderr to stdout to avoid blocking
         QString shellCommand = QString("OLLAMA_NO_TTY=1 NO_COLOR=1 ollama run gemma3n:e2b \\\"%1\\\" > \\\"%2\\\"").arg(escapedPrompt, outputPath);
         QString osaScript = QString("do shell script \"%1\"").arg(shellCommand);
@@ -577,7 +578,8 @@ void Articoli::showArticleText(const QString &title, const QString &text)
                         // Escape for AppleScript
                         QString correzionePromptEscaped = escapeForAppleScriptShell(correzionePrompt);
 
-                        QString outputPath = "/Users/riccardoorsi/Desktop/deutschlernen/controlla_risposte.txt";
+                        QString filePath = QDir(QCoreApplication::applicationDirPath()).filePath("controlla_risposte.txt");
+
                         QString shellCommand = QString("OLLAMA_NO_TTY=1 NO_COLOR=1 ollama run gemma3n:e2b \\\"%1\\\" > \\\"%2\\\"")
                             .arg(correzionePromptEscaped, outputPath);
                         QString osaScript = QString("do shell script \"%1\"").arg(shellCommand);
