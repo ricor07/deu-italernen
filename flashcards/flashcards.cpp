@@ -116,7 +116,8 @@ Flashcards::Flashcards(QWidget *parent) : QWidget(parent) {
 
     connect(btnStorico, &QPushButton::clicked, this, [this]() {
         // Show storico dialog
-        QString historyDir = QDir::homePath() + "/Desktop/deutschlernen/scheda_history";
+        QString historyDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/history";
+
         QDir dir(historyDir);
         if (!dir.exists()) {
             QMessageBox::information(this, "Storico", "Nessuna scheda completata.");
