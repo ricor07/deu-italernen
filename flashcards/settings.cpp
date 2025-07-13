@@ -3,6 +3,7 @@
 #include <QSpinBox>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QStandardPaths>
 #include <QVBoxLayout>
 #include <QSettings>
 
