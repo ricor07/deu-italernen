@@ -4,6 +4,7 @@
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QStandardPaths>
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
