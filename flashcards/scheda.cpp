@@ -1,4 +1,5 @@
 #include "scheda.h"
+
 #include <QFile>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -15,6 +16,11 @@
 #include <QSet>
 #include <QDir>
 #include <QDateTime>
+#include <QCoreApplication>
+#include <QList>
+#include <QVector>
+#include <QStringList>
+
 
 Scheda::Scheda(bool deToIt, int numeroparole, int numerotentativi, QWidget *parent) 
     : QWidget(parent), deToIt(deToIt), numeroParole(numeroparole), numeroTentativi(numerotentativi), currentIndex(-1)
