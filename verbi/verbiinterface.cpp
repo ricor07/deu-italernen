@@ -12,6 +12,7 @@
 #include <QToolButton>
 #include <QFrame>
 #include <QFile>
+#include <QStandardPaths>
 #include <QEvent>
 #include <QKeyEvent>
 #include <QTextStream>
