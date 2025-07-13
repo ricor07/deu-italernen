@@ -2,6 +2,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QFile>
+#include <QStandardPaths>
 #include <QTextStream>
 #include <QMessageBox>
 #include <QDir>
