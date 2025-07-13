@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QStandardPaths>
 #include <QDir>
 #include <QTextEdit>
 #include <QDebug>
