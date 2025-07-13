@@ -1,4 +1,4 @@
-# MyQtApp
+# DeutschLernen
 
 _Un'applicazione desktop multipiattaforma sviluppata in **C++**, **Qt** e **CMake**._  
 _Eine plattformübergreifende Desktop-Anwendung, entwickelt mit **C++**, **Qt** und **CMake**._
