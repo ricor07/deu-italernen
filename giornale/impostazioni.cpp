@@ -1,6 +1,7 @@
 #include "impostazioni.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QStandardPaths>
 #include <QLabel>
 #include <QSettings>
 
