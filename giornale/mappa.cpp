@@ -1,12 +1,16 @@
 #include "mappa.h"
 #include "array.h"
-#include <QMessageBox>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QStandardPaths>
+
+#include <QDir>
+#include <QCoreApplication>
 #include <QLabel>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QResizeEvent>
+#include <QMap>
+#include <QPair>
+
 
 extern void initGiornali();
 
