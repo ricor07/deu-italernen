@@ -7,6 +7,7 @@
 #include <QPair>
 #include <QTextStream>
 #include <QLineEdit>
+#include <QStandardPaths>
 #include <QDebug>
 #include <QPushButton>
 #include <QRandomGenerator>
