@@ -1,5 +1,6 @@
 #include "correction.h"
 #include "verbiinterface.h"
+
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
@@ -8,6 +9,11 @@
 #include <QColor>
 #include <QStandardPaths>
 #include <QPalette>
+#include <QDir>                // Needed for QDir
+#include <QCoreApplication>    // Needed for QCoreApplication::applicationDirPath()
+#include <QVector>             // Needed for QVector
+#include <QWidget>             // Needed for QWidget*
+
 
 void correzioneverbi(QWidget *parent)
 {
