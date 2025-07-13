@@ -8,32 +8,86 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-# Try common Qt6 paths if not set externally
-if(NOT DEFINED CMAKE_PREFIX_PATH)
+# Function to search for Qt in common locations
+function(find_qt_paths)
+    set(QT_POSSIBLE_PATHS "")
+
     if(APPLE)
-        list(APPEND CMAKE_PREFIX_PATH
+        # macOS common Qt paths
+        list(APPEND QT_POSSIBLE_PATHS
             "$ENV{HOME}/Qt/6.9.1/macos"
-            "/opt/homebrew/opt/qt/lib/cmake"
+            "$ENV{HOME}/Qt/6.8.0/macos"
+            "/opt/homebrew/opt/qt"
+            "/opt/homebrew/opt/qt6"
+            "/usr/local/opt/qt"
+            "/Applications/Qt/6.9.1/macos"
         )
     elseif(WIN32)
-        list(APPEND CMAKE_PREFIX_PATH
+        # Windows common Qt paths
+        list(APPEND QT_POSSIBLE_PATHS
             "C:/Qt/6.9.1/msvc2019_64"
-            "C:/vcpkg/installed/x64-windows/share/qt6"
+            "C:/Qt/6.8.0/msvc2019_64"
+            "C:/Qt/6.7.2/msvc2019_64"
+            "C:/vcpkg/installed/x64-windows"
+            "C:/Qt/6.9.1/mingw_64"
         )
-    else()  # Linux
-        list(APPEND CMAKE_PREFIX_PATH
+    else() # Linux/Unix
+        # Linux common Qt paths
+        list(APPEND QT_POSSIBLE_PATHS
             "$ENV{HOME}/Qt/6.9.1/gcc_64"
+            "$ENV{HOME}/Qt/6.8.0/gcc_64"
             "/usr/lib/x86_64-linux-gnu/cmake/Qt6"
             "/usr/local/lib/cmake/Qt6"
+            "/opt/Qt/6.9.1/gcc_64"
+            "/usr/lib/cmake/Qt6"
         )
+    endif()
+
+    # Add user-specified Qt path from environment variable
+    if(DEFINED ENV{QT_DIR})
+        list(APPEND QT_POSSIBLE_PATHS "$ENV{QT_DIR}")
+    endif()
+
+    # Remove duplicates and non-existent paths
+    list(REMOVE_DUPLICATES QT_POSSIBLE_PATHS)
+    foreach(path ${QT_POSSIBLE_PATHS})
+        if(EXISTS "${path}")
+            list(APPEND CMAKE_PREFIX_PATH "${path}")
+        endif()
+    endforeach()
+
+    # Make CMAKE_PREFIX_PATH unique and available to parent scope
+    if(CMAKE_PREFIX_PATH)
+        list(REMOVE_DUPLICATES CMAKE_PREFIX_PATH)
+        set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH}" PARENT_SCOPE)
+    endif()
+endfunction()
+
+# Call the function to populate CMAKE_PREFIX_PATH
+find_qt_paths()
+
+# Try to find Qt6, fall back to Qt5 if Qt6 is not found
+find_package(Qt6 QUIET COMPONENTS Widgets Core)
+if(NOT Qt6_FOUND)
+    message(WARNING "Qt6 not found, trying Qt5...")
+    find_package(Qt5 REQUIRED COMPONENTS Widgets Core)
+    if(Qt5_FOUND)
+        message(STATUS "Using Qt5 found at ${Qt5_DIR}")
+    else()
+        message(FATAL_ERROR "Neither Qt6 nor Qt5 could be found. Please specify Qt path via -DQT_DIR or ensure Qt is installed.")
     endif()
 endif()
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets Core)
+# Print Qt version for confirmation
+if(Qt6_FOUND)
+    message(STATUS "Using Qt6 version ${Qt6Core_VERSION}")
+else()
+    message(STATUS "Using Qt5 version ${Qt5Core_VERSION}")
+endif()
 
+# Define the executable with all source files
 add_executable(deutschlernen
     main.cpp
-
     flashcards/flashcards.cpp
     flashcards/flashcards.h
     flashcards/gioca.cpp
@@ -48,7 +102,6 @@ add_executable(deutschlernen
     flashcards/statistiche.h
     flashcards/scheda.cpp
     flashcards/scheda.h
-
     giornale/mappa.cpp
     giornale/mappa.h
     giornale/giornale.cpp
@@ -63,14 +116,18 @@ add_executable(deutschlernen
     giornale/invio.h
     giornale/articoli.cpp
     giornale/articoli.h
-
     verbi/verbiinterface.cpp
     verbi/verbiinterface.h
     verbi/correction.cpp
     verbi/correction.h
 )
 
-target_link_libraries(deutschlernen PRIVATE Qt6::Widgets Qt6::Core)
+# Link against Qt libraries
+if(Qt6_FOUND)
+    target_link_libraries(deutschlernen PRIVATE Qt6::Widgets Qt6::Core)
+else()
+    target_link_libraries(deutschlernen PRIVATE Qt5::Widgets Qt5::Core)
+endif()
 
 # Copy CSV files after build
 add_custom_command(TARGET deutschlernen POST_BUILD
