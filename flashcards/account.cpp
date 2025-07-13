@@ -2,10 +2,11 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QFile>
-#include <QStandardPaths>
 #include <QTextStream>
 #include <QMessageBox>
 #include <QDir>
+#include <QStandardPaths>
+#include <QCoreApplication>  // FIXED: Needed for applicationDirPath()
 
 Account::Account(QWidget *parent) : QWidget(parent)
 {
@@ -30,7 +31,7 @@ void Account::resetScores()
 {
     QString scoresPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/scores.csv");
 
-    QFile file(filepath);
+    QFile file(scoresPath);  // FIXED: was 'filepath', now 'scoresPath'
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::warning(this, "Error", "Cannot open scores.csv for reading.");
         return;
@@ -46,7 +47,6 @@ void Account::resetScores()
 
         // Expect format: word, int, int
         if (parts.size() == 3) {
-            // Keep word, set ints to 0
             parts[1] = "0";
             parts[2] = "0";
             line = parts.join(',');
@@ -69,7 +69,6 @@ void Account::resetScores()
 
     // Delete all storico (history) files for verbi
     QString historyDir = QDir(QCoreApplication::applicationDirPath()).filePath("history");
-
     QDir dir(historyDir);
     if (dir.exists()) {
         QStringList files = dir.entryList(QStringList() << "*.json", QDir::Files);
@@ -90,7 +89,7 @@ void Account::resetScores()
             schedaDir.remove(filename);
         }
     } else {
-        dir.mkpath(".");
+        schedaDir.mkpath(".");  // FIXED: previously dir.mkpath(), now correct one
     }
 
     QMessageBox::information(this, "Reset", "Scores have been reset to zero e storico svuotato.");
