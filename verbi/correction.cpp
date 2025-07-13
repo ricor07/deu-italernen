@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QLineEdit>
 #include <QColor>
+#include <QStandardPaths>
 #include <QPalette>
 
 void correzioneverbi(QWidget *parent)
