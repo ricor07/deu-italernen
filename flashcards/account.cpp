@@ -27,7 +27,7 @@ void Account::onResetClicked()
 
 void Account::resetScores()
 {
-    const QString filepath = "/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/scores.csv";
+    QString scoresPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/scores.csv");
 
     QFile file(filepath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -67,23 +67,29 @@ void Account::resetScores()
     file.close();
 
     // Delete all storico (history) files for verbi
-    QString historyDir = QDir::homePath() + "/Desktop/deutschlernen/history";
+    QString historyDir = QDir(QCoreApplication::applicationDirPath()).filePath("history");
+
     QDir dir(historyDir);
     if (dir.exists()) {
         QStringList files = dir.entryList(QStringList() << "*.json", QDir::Files);
         for (const QString &filename : files) {
             dir.remove(filename);
         }
+    } else {
+        dir.mkpath(".");
     }
 
     // Delete all storico (history) files for schede
-    QString schedaHistoryDir = QDir::homePath() + "/Desktop/deutschlernen/scheda_history";
+    QString schedaHistoryDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/scheda_history";
+
     QDir schedaDir(schedaHistoryDir);
     if (schedaDir.exists()) {
         QStringList schedaFiles = schedaDir.entryList(QStringList() << "scheda_*.csv", QDir::Files);
         for (const QString &filename : schedaFiles) {
             schedaDir.remove(filename);
         }
+    } else {
+        dir.mkpath(".");
     }
 
     QMessageBox::information(this, "Reset", "Scores have been reset to zero e storico svuotato.");
