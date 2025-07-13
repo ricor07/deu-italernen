@@ -210,7 +210,6 @@ void Gioca::saveScores(int index, const QPair<int, int>& tupleToAdd) {
     std::get<1>(row) += tupleToAdd.first;
     std::get<2>(row) += tupleToAdd.second;
 
-    QString scoresPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/scores.csv");
     QFile outFile(scoresPath);
 
     if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
