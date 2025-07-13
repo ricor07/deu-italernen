@@ -47,7 +47,8 @@ void Search::loadFlashcards()
 {
     flashcardPairs.clear();
 
-    const QString filepath = "/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/flashcards.csv";
+    const QString filepath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/flashcards.csv");
+
     QFile file(filepath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::warning(this, "Error", "Cannot open flashcards.csv");
