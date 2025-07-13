@@ -10,8 +10,11 @@
 extern void initGiornali();
 
 Mappa::Mappa(QWidget *parent)
-    : QWidget(parent), map("/Users/riccardoorsi/Desktop/deutschlernen/map.png"), zoomLevel(1.0f)
-{
+    : QWidget(parent),
+      map(QDir(QCoreApplication::applicationDirPath()).filePath("map.png")),
+      zoomLevel(1.0f)
+{}
+
 
     initGiornali(); // Initialize the array
 
