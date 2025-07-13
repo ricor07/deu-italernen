@@ -11,6 +11,7 @@
 #include <QIcon>
 #include <QLabel>
 #include <QDialog>
+#include <QStandardPaths>
 #include <QListWidget>
 #include <QDir>
 #include <QFileInfo>
