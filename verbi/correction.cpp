@@ -17,7 +17,8 @@ void correzioneverbi(QWidget *parent)
     }
 
     // 1. Read CSV file
-    QString csvPath = "/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/coniugverbi.csv";
+    QString csvPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/coniugverbi.csv");
+
     QFile file(csvPath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::warning(parent, "Errore", "Impossibile leggere il file coniugverbi.csv");
