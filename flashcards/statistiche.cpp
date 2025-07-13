@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QStringList>
+#include <QStandardPaths>
 #include <QDebug>
 
 Statistiche::Statistiche(QWidget *parent)
