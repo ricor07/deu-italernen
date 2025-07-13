@@ -11,6 +11,7 @@
 #include <QMap>
 #include <QPair>
 
+// External data
 extern void initGiornali();
 
 Mappa::Mappa(QWidget *parent)
@@ -56,25 +57,23 @@ Mappa::Mappa(QWidget *parent)
         cityButton->setStyleSheet(
             "QPushButton {"
             "   background-color: transparent;"
-            "   color: rgba(0, 0, 0, 0.3);"  // Semi-transparent black
+            "   color: rgba(0, 0, 0, 0.3);"
             "   border: none;"
-            "   font: bold 7px;"  // Smaller font
+            "   font: bold 7px;"
             "   padding: 1px;"
             "}"
             "QPushButton:hover {"
-            "   color: black;"               // Solid black on hover
-            "   text-decoration: underline;"  // Added underline on hover
+            "   color: black;"
+            "   text-decoration: underline;"
             "}"
         );
-        cityButton->setFixedSize(60, 15);  // Smaller button size
-        cityButton->move(px - 20, py - 7); // Adjusted centering for new size
+        cityButton->setFixedSize(60, 15);
+        cityButton->move(px - 20, py - 7);
         cityButton->show();
         cityButton->raise();
 
-        // Store button and its original position for scaling
         cityButtons.append({cityName, cityButton, QPoint(px - 20, py - 7)});
 
-        // Connect button click to show city info
         connect(cityButton, &QPushButton::clicked, this, [this, cityName]() {
             emit citySelected(cityName);
         });
@@ -94,15 +93,53 @@ Mappa::Mappa(QWidget *parent)
     zoomLayout->setSpacing(4);
     zoomLayout->setAlignment(Qt::AlignCenter);
 
-    // Right-side layout: map and zoom controls
     rightLayout = new QVBoxLayout();
     rightLayout->addWidget(mapLabel, 0, Qt::AlignCenter);
     rightLayout->addLayout(zoomLayout);
     rightLayout->addStretch();
 
-    // Main layout: left stretch + right layout
     mainLayout = new QHBoxLayout(this);
     mainLayout->addStretch();
     mainLayout->addLayout(rightLayout);
     setLayout(mainLayout);
+}
+
+void Mappa::zoomIn()
+{
+    if (zoomLevel < 2.75f) {
+        zoomLevel += 0.25f;
+        updateMapDisplay();
+    }
+}
+
+void Mappa::zoomOut()
+{
+    if (zoomLevel > 0.5f) {
+        zoomLevel -= 0.25f;
+        updateMapDisplay();
+    }
+}
+
+void Mappa::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+    updateMapDisplay();
+}
+
+void Mappa::updateMapDisplay()
+{
+    QSize baseSize = QSize(300, 300);
+    QSize zoomedSize = baseSize * zoomLevel;
+    QPixmap scaledMap = map.scaled(zoomedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    mapLabel->setPixmap(scaledMap);
+    mapLabel->setFixedSize(scaledMap.size());
+
+    float scaleX = static_cast<float>(scaledMap.width()) / 300.0f;
+    float scaleY = static_cast<float>(scaledMap.height()) / 300.0f;
+
+    for (const auto &cityButton : cityButtons) {
+        QPoint scaledPos(static_cast<int>(cityButton.originalPos.x() * scaleX),
+                         static_cast<int>(cityButton.originalPos.y() * scaleY));
+        cityButton.button->move(scaledPos);
+    }
 }
