@@ -2,6 +2,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QStringList>
+#include <QCoreApplication>
+#include <QDir>  // Also required for QDir
 #include <QStandardPaths>
 #include <QDebug>
 
