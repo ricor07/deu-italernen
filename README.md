@@ -42,7 +42,7 @@ cmake ..
 Su Linux/macOS:
 Unter Linux/macOS:
 
-```./deutschlernenApp```
+```./deutschlernen```
 
 Su Windows:
 Unter Windows:
