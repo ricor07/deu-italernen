@@ -8,8 +8,10 @@
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
-#include <algorithm>    // for std::sort
-#include <string>       // for std::as_const
+#include <QDir>
+#include <QCoreApplication>  // ✅ FIXED: Required for QCoreApplication::applicationDirPath()
+#include <algorithm>         // for std::sort
+#include <string>            // for std::as_const
 
 Search::Search(QWidget *parent) : QWidget(parent)
 {
@@ -64,7 +66,7 @@ void Search::loadFlashcards()
         QStringList parts = line.split(',');
         if (parts.size() < 2) continue;
 
-        // parts[0] = German, parts[1] = Italian, parts[2] = char ignored
+        // parts[0] = German, parts[1] = Italian
         flashcardPairs.append(qMakePair(parts[0].trimmed(), parts[1].trimmed()));
     }
 
@@ -82,33 +84,27 @@ void Search::updateList(const QString &filter)
 
     QString filterLower = filter.toLower();
 
-    // Create a temp copy to sort before filtering
     QList<QPair<QString, QString>> sortedPairs = flashcardPairs;
 
     if (isDE) {
-        // Sort by German (first)
         std::sort(sortedPairs.begin(), sortedPairs.end(),
                   [](const QPair<QString, QString> &a, const QPair<QString, QString> &b) {
                       return a.first.toLower() < b.first.toLower();
                   });
     } else {
-        // Sort by Italian (second)
         std::sort(sortedPairs.begin(), sortedPairs.end(),
                   [](const QPair<QString, QString> &a, const QPair<QString, QString> &b) {
                       return a.second.toLower() < b.second.toLower();
                   });
     }
 
-    // Use std::as_const instead of deprecated qAsConst
     for (const auto &pair : std::as_const(sortedPairs)) {
         QString key = isDE ? pair.first : pair.second;
 
         if (key.toLower().startsWith(filterLower)) {
-            QString displayText;
-            if (isDE)
-                displayText = pair.first + " - " + pair.second;
-            else
-                displayText = pair.second + " - " + pair.first;
+            QString displayText = isDE
+                ? pair.first + " - " + pair.second
+                : pair.second + " - " + pair.first;
 
             listResults->addItem(displayText);
         }
