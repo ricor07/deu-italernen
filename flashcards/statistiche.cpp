@@ -34,7 +34,9 @@ Statistiche::Statistiche(QWidget *parent)
 
 void Statistiche::loadStatistics()
 {
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/scores.csv");
+    QString scoresPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/scores.csv");
+    QFile file(scoresPath);
+
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning("Could not open scores.csv");
         return;
