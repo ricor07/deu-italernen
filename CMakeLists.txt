@@ -8,73 +8,64 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-# Function to search for Qt in common locations
-function(find_qt_paths)
-    set(QT_POSSIBLE_PATHS "")
+# Allow user to specify Qt path via -DQT_DIR or $QT_DIR environment variable
+if(DEFINED ENV{QT_DIR})
+    set(QT_DIR $ENV{QT_DIR} CACHE PATH "Path to Qt installation")
+endif()
 
+# Set CMAKE_PREFIX_PATH if QT_DIR is provided
+if(DEFINED QT_DIR)
+    if(EXISTS "${QT_DIR}")
+        list(APPEND CMAKE_PREFIX_PATH "${QT_DIR}")
+    else()
+        message(WARNING "Specified QT_DIR '${QT_DIR}' does not exist. Falling back to system search.")
+    endif()
+endif()
+
+# Minimal set of common Qt paths as fallback (only if no QT_DIR is set)
+if(NOT DEFINED QT_DIR)
     if(APPLE)
-        # macOS common Qt paths
-        list(APPEND QT_POSSIBLE_PATHS
-            "$ENV{HOME}/Qt/6.9.1/macos"
-            "$ENV{HOME}/Qt/6.8.0/macos"
+        list(APPEND CMAKE_PREFIX_PATH
+            "$ENV{HOME}/Qt"
             "/opt/homebrew/opt/qt"
-            "/opt/homebrew/opt/qt6"
             "/usr/local/opt/qt"
-            "/Applications/Qt/6.9.1/macos"
         )
     elseif(WIN32)
-        # Windows common Qt paths
-        list(APPEND QT_POSSIBLE_PATHS
-            "C:/Qt/6.9.1/msvc2019_64"
-            "C:/Qt/6.8.0/msvc2019_64"
-            "C:/Qt/6.7.2/msvc2019_64"
+        list(APPEND CMAKE_PREFIX_PATH
+            "C:/Qt"
             "C:/vcpkg/installed/x64-windows"
-            "C:/Qt/6.9.1/mingw_64"
         )
     else() # Linux/Unix
-        # Linux common Qt paths
-        list(APPEND QT_POSSIBLE_PATHS
-            "$ENV{HOME}/Qt/6.9.1/gcc_64"
-            "$ENV{HOME}/Qt/6.8.0/gcc_64"
+        list(APPEND CMAKE_PREFIX_PATH
+            "$ENV{HOME}/Qt"
             "/usr/lib/x86_64-linux-gnu/cmake/Qt6"
-            "/usr/local/lib/cmake/Qt6"
-            "/opt/Qt/6.9.1/gcc_64"
             "/usr/lib/cmake/Qt6"
+            "/opt/Qt"
         )
     endif()
-
-    # Add user-specified Qt path from environment variable
-    if(DEFINED ENV{QT_DIR})
-        list(APPEND QT_POSSIBLE_PATHS "$ENV{QT_DIR}")
-    endif()
-
-    # Remove duplicates and non-existent paths
-    list(REMOVE_DUPLICATES QT_POSSIBLE_PATHS)
-    foreach(path ${QT_POSSIBLE_PATHS})
-        if(EXISTS "${path}")
-            list(APPEND CMAKE_PREFIX_PATH "${path}")
-        endif()
-    endforeach()
-
-    # Make CMAKE_PREFIX_PATH unique and available to parent scope
+    # Remove duplicates from CMAKE_PREFIX_PATH
     if(CMAKE_PREFIX_PATH)
         list(REMOVE_DUPLICATES CMAKE_PREFIX_PATH)
-        set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH}" PARENT_SCOPE)
     endif()
-endfunction()
+endif()
 
-# Call the function to populate CMAKE_PREFIX_PATH
-find_qt_paths()
-
-# Try to find Qt6, fall back to Qt5 if Qt6 is not found
+# Try to find Qt6
 find_package(Qt6 QUIET COMPONENTS Widgets Core)
+
+# Fallback to Qt5 if Qt6 is not found
 if(NOT Qt6_FOUND)
     message(WARNING "Qt6 not found, trying Qt5...")
     find_package(Qt5 REQUIRED COMPONENTS Widgets Core)
     if(Qt5_FOUND)
         message(STATUS "Using Qt5 found at ${Qt5_DIR}")
     else()
-        message(FATAL_ERROR "Neither Qt6 nor Qt5 could be found. Please specify Qt path via -DQT_DIR or ensure Qt is installed.")
+        message(FATAL_ERROR
+            "Neither Qt6 nor Qt5 could be found.\n"
+            "Please specify the Qt installation path using one of these methods:\n"
+            "  1. Set the QT_DIR environment variable, e.g., 'export QT_DIR=/path/to/qt' (Linux/macOS) or 'set QT_DIR=C:\\path\\to\\qt' (Windows).\n"
+            "  2. Pass -DQT_DIR=/path/to/qt when running CMake.\n"
+            "  3. Install Qt via your package manager (e.g., 'brew install qt' on macOS, 'sudo apt-get install qt6-base-dev' on Ubuntu, or download from https://www.qt.io/download).\n"
+            "Current CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
     endif()
 endif()
 
