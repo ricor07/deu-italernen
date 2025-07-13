@@ -80,7 +80,9 @@ Gioca::Gioca(bool deToIt, QWidget *parent) : QWidget(parent), deToIt(deToIt) {
 }
 
 void Gioca::loadFlashcards() {
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/flashcards.csv");
+    QString csvPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/flashcards.csv");
+    QFile file(csvPath);
+
     if (!file.open(QIODevice::ReadOnly)) {
         QMessageBox::critical(this, "Errore", "Impossibile aprire flashcards.csv");
         return;
@@ -119,7 +121,9 @@ void Gioca::loadFlashcards() {
 void Gioca::loadScores() {
     scores.clear();
 
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/scores.csv");
+    QString scoresPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/scores.csv");
+    QFile file(scoresPath);
+
     if (!file.open(QIODevice::ReadOnly)) {
         int totalWords = flashcards.size() * 2;
         for (int i = 0; i < totalWords; ++i)
@@ -165,7 +169,9 @@ void Gioca::loadScores() {
 void Gioca::saveScores(int index, const QPair<int, int>& tupleToAdd) {
     QVector<std::tuple<QString, int, int>> csvData;
 
-    QFile file("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/scores.csv");
+    QString scoresPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/scores.csv");
+    QFile file(scoresPath);
+
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Cannot open CSV file for reading";
         return;
@@ -201,7 +207,9 @@ void Gioca::saveScores(int index, const QPair<int, int>& tupleToAdd) {
     std::get<1>(row) += tupleToAdd.first;
     std::get<2>(row) += tupleToAdd.second;
 
-    QFile outFile("/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/scores.csv");
+    QString scoresPath = QDir(QCoreApplication::applicationDirPath()).filePath("csvfiles/scores.csv");
+    QFile outFile(scoresPath);
+
     if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
         qDebug() << "Cannot open CSV file for writing";
         return;
