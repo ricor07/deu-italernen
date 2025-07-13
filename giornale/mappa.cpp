@@ -11,16 +11,13 @@
 #include <QMap>
 #include <QPair>
 
-
 extern void initGiornali();
 
 Mappa::Mappa(QWidget *parent)
     : QWidget(parent),
       map(QDir(QCoreApplication::applicationDirPath()).filePath("map.png")),
       zoomLevel(1.0f)
-{}
-
-
+{
     initGiornali(); // Initialize the array
 
     // QLabel that shows the map
@@ -109,45 +106,3 @@ Mappa::Mappa(QWidget *parent)
     mainLayout->addLayout(rightLayout);
     setLayout(mainLayout);
 }
-
-void Mappa::zoomIn()
-{
-    if (zoomLevel < 2.75f) {
-        zoomLevel += 0.25f;
-        updateMapDisplay();
-    }
-}
-
-void Mappa::zoomOut()
-{
-    if (zoomLevel > 0.5f) {
-        zoomLevel -= 0.25f;
-        updateMapDisplay();
-    }
-}
-
-void Mappa::resizeEvent(QResizeEvent *event)
-{
-    QWidget::resizeEvent(event);
-    updateMapDisplay();
-}
-
-void Mappa::updateMapDisplay()
-{
-    QSize baseSize = QSize(300, 300);
-    QSize zoomedSize = baseSize * zoomLevel;
-    QPixmap scaledMap = map.scaled(zoomedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    mapLabel->setPixmap(scaledMap);
-    mapLabel->setFixedSize(scaledMap.size());
-
-    float scaleX = static_cast<float>(scaledMap.width()) / 300.0f;
-    float scaleY = static_cast<float>(scaledMap.height()) / 300.0f;
-
-    // Scale all city buttons
-    for (const auto &cityButton : cityButtons) {
-        QPoint scaledPos(static_cast<int>(cityButton.originalPos.x() * scaleX),
-                         static_cast<int>(cityButton.originalPos.y() * scaleY));
-        cityButton.button->move(scaledPos);
-    }
-}
-
