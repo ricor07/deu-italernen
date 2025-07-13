@@ -168,11 +168,11 @@ configure_file(
     COPYONLY
 )
 
-file(COPY ${CMAKE_SOURCE_DIR}/deu-italernen/map.png DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${CMAKE_SOURCE_DIR}/deu-italernen/controlla_risposte.txt DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${CMAKE_SOURCE_DIR}/deu-italernen/correggiverbi.txt DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${CMAKE_SOURCE_DIR}/deu-italernen/domande_output.txt DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${CMAKE_SOURCE_DIR}/deu-italernen/ollamaoutput.txt DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/map.png DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/controlla_risposte.txt DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/correggiverbi.txt DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/domande_output.txt DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/ollamaoutput.txt DESTINATION ${CMAKE_BINARY_DIR})
 
 # Make Python script executable
 file(CHMOD ${CMAKE_BINARY_DIR}/returnarticles.py
