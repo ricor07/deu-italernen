@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QStandardPaths>
 #include <QLabel>
 #include <QResizeEvent>
 
