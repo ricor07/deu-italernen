@@ -4,6 +4,7 @@
 #include "invio.h"  // Add this line
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QStandardPaths>
 #include "array.h"
 
 Giornale::Giornale(QWidget *parent)
