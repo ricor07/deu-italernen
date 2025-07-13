@@ -8,6 +8,7 @@
 #include <QTextStream>
 #include <QLineEdit>
 #include <QStandardPaths>
+#include <QCoreApplication>
 #include <QDebug>
 #include <QPushButton>
 #include <QRandomGenerator>
