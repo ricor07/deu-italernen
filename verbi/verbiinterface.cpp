@@ -80,7 +80,9 @@ VerbiInterface::VerbiInterface(QWidget *parent)
     imperativPrasens.resize(6);
 
     // Randomly choose a verb from csv
-    QString csvPath = "/Users/riccardoorsi/Desktop/deutschlernen/csvfiles/flashcards.csv";
+    QString basePath = QCoreApplication::applicationDirPath();
+    QString csvPath = QDir(basePath).filePath("csvfiles/flashcards.csv");
+
     QFile file(csvPath);
     QStringList eligibleVerbs;
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -450,7 +452,8 @@ void VerbiInterface::loadFromHistory(const QString &verbToLoad)
 // Storico dialog
 void VerbiInterface::openStoricoDialog()
 {
-    QString historyDir = QDir::homePath() + "/Desktop/deutschlernen/history";
+    QString historyDir = QDir(QCoreApplication::applicationDirPath()).filePath("history");
+
     QDir dir(historyDir);
     if (!dir.exists()) {
         QMessageBox::information(this, "Storico", "Nessun verbo nello storico.");
