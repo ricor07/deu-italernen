@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+ca19648bb9c78ec9224e329b3effc841 CMakeFiles/deutschlernen_autogen
+6521d5c0ec8774113b22b133a04d572f deutschlernen_autogen/EWIEGA46WW/qrc_resources.cpp
+dd197413ee166a4002e8476e59044576 deutschlernen_autogen/timestamp

@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "qhboxlayout": "cpp",
+        "qwidget": "cpp",
+        "locale": "cpp",
+        "qspinbox": "cpp",
+        "thread": "cpp",
+        "ios": "cpp"
+    }
+}

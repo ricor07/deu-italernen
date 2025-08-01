@@ -1,0 +1,5 @@
+/Users/riccardoorsi/Desktop/deutschlernen/build/CMakeFiles/deutschlernen.dir
+/Users/riccardoorsi/Desktop/deutschlernen/build/CMakeFiles/edit_cache.dir
+/Users/riccardoorsi/Desktop/deutschlernen/build/CMakeFiles/rebuild_cache.dir
+/Users/riccardoorsi/Desktop/deutschlernen/build/CMakeFiles/deutschlernen_autogen_timestamp_deps.dir
+/Users/riccardoorsi/Desktop/deutschlernen/build/CMakeFiles/deutschlernen_autogen.dir
